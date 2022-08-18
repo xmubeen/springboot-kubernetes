@@ -25,7 +25,7 @@ jobs:
           cache: 'maven'
       - name: Build with Maven
         run: |
-          git update-index --chmod=+x mvnw
+          chmod +x mvnw
           ./mvnw verify
 
       - if: ${{ github.ref == 'refs/heads/main' }}
