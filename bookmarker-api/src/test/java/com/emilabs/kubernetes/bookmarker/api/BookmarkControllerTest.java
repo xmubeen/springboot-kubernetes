@@ -111,7 +111,7 @@ public class BookmarkControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content("""
                 {
-                  "title": "SivaLabs Blog",
+                  "title": "SivaLabs Blog"
                 }
                 """)
     )
