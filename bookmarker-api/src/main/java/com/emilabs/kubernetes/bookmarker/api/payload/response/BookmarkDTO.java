@@ -1,4 +1,4 @@
-package com.emilabs.kubernetes.bookmarker.domain;
+package com.emilabs.kubernetes.bookmarker.api.payload.response;
 
 import com.emilabs.kubernetes.bookmarker.domain.projection.BookmarkProjectionDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;

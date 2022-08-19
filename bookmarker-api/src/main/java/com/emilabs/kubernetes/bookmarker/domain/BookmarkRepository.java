@@ -10,4 +10,10 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 
   @Query("select new com.emilabs.kubernetes.bookmarker.domain.projection.BookmarkProjectionDTO(b.id, b.title, b.url, b.createdAt) from Bookmark b")
   Page<BookmarkProjectionDTO> findBookmarks(Pageable pageable);
+
+  @Query("""
+    select new com.emilabs.kubernetes.bookmarker.domain.projection.BookmarkProjectionDTO(b.id, b.title, b.url, b.createdAt) from Bookmark b
+    where lower(b.title) like lower(concat('%', :query, '%'))
+  """)
+  Page<BookmarkProjectionDTO> searchBookmarks(String query, Pageable pageable);
 }

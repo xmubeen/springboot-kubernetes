@@ -1,6 +1,9 @@
 package com.emilabs.kubernetes.bookmarker.domain;
 
+import com.emilabs.kubernetes.bookmarker.api.payload.request.CreateBookmarkRequest;
+import com.emilabs.kubernetes.bookmarker.api.payload.response.BookmarkDTO;
 import com.emilabs.kubernetes.bookmarker.domain.projection.BookmarkProjectionDTO;
+import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class BookmarkService {
   private final BookmarkRepository repository;
-  private final BookmarkWrapper bookmarkWrapper;
+  private final BookmarkWrapper bookmarkMapper;
 
   @Transactional(readOnly = true)
   public BookmarkDTO getBookmarks(Integer page) {
@@ -22,5 +25,19 @@ public class BookmarkService {
     Pageable pageable = PageRequest.of(pageNo, 10, Sort.Direction.DESC, "createdAt");
     Page<BookmarkProjectionDTO> bookmarkPage = repository.findBookmarks(pageable);
     return new BookmarkDTO(bookmarkPage);
+  }
+
+  @Transactional(readOnly = true)
+  public BookmarkDTO searchBookmarks(String query, Integer page) {
+    int pageNo = page < 1 ? 0 : page -1;
+    Pageable pageable = PageRequest.of(pageNo, 10, Sort.Direction.DESC, "createdAt");
+    Page<BookmarkProjectionDTO> bookmarkPage = repository.searchBookmarks(query, pageable);
+    return new BookmarkDTO(bookmarkPage);
+  }
+
+  public BookmarkProjectionDTO createBookmark(CreateBookmarkRequest request) {
+    Bookmark bookmark = new Bookmark(null, request.getTitle(), request.getUrl(), Instant.now());
+    Bookmark savedBookmark = repository.save(bookmark);
+    return bookmarkMapper.toDTO(savedBookmark);
   }
 }
